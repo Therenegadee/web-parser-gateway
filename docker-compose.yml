@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+
+  db-user:
+    image: postgres
+    environment:
+      - POSTGRES_DB=user_service
+      - POSTGRES_USER=userService
+      - POSTGRES_PASSWORD=userService
+    ports:
+      - 5432:5432
+
+  db-scrapper:
+    image: postgres
+    environment:
+      - POSTGRES_DB=scraper_service
+      - POSTGRES_USER=scraperService
+      - POSTGRES_PASSWORD=scraperService
+    ports:
+      - 5433:5432
+
+  db-study:
+    image: postgres
+    environment:
+      - POSTGRES_DB=telegram_service
+      - POSTGRES_USER=telegramService
+      - POSTGRES_PASSWORD=telegramService
+    ports:
+      - 5434:5432

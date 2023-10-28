@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: localhost:8761/eureka
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: AuthService
+          uri: lb://auth-service
+          Predicates:
+            - Path=/api/auth/**
+        - id: ParserService
+          uri: lb://parser-service
+          Predicates:
+            - Path=/api/parser/**
+          filters:
+            - AuthFilter
+        - id: UserService
+          uri: lb://user-service
+          Predicates:
+            - Path=/api/user/**
+          filters:
+            - AuthFilter
