@@ -4,7 +4,7 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka
 
 management:
   endpoint:
@@ -25,18 +25,22 @@ spring:
           enabled: true
       routes:
         - id: AuthService
-          uri: lb://auth-service
-          Predicates:
+          uri: lb://user-service
+          predicates:
             - Path=/api/auth/**
         - id: ParserService
           uri: lb://parser-service
-          Predicates:
+          predicates:
             - Path=/api/parser/**
           filters:
             - AuthFilter
         - id: UserService
           uri: lb://user-service
-          Predicates:
+          predicates:
             - Path=/api/user/**
           filters:
             - AuthFilter
+
+jwt:
+  jwtSecret: CzBWQs4W2SoUHFDjVUWPEP3rSUGCO9afPcYh8oYWqk0ht2XN3auyJYYdzcnXV0lq
+  jwtExpirationMs: 7200000

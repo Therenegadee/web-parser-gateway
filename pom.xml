@@ -129,7 +129,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>./src/main/resources/openAPI/parser-api.openapi.yml</inputSpec>
+							<inputSpec>./src/main/resources/openAPI/user-api.openapi.yml</inputSpec>
 							<generatorName>java</generatorName>
 							<library>native</library>
 							<apiPackage>parser.gateway.openapi.api</apiPackage>

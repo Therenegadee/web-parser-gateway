@@ -74,7 +74,7 @@ paths:
           description: Authentication error! Incorrect login/password input.
 
   /auth/activation:
-    patch:
+    put:
       summary: Activation User account via Email
       tags:
         - Authorization
@@ -116,127 +116,6 @@ paths:
                 $ref: "#/components/schemas/JwtResponseOpenApi"
         '400':
           description: Token isn't Valid
-
-  /parser/settings:
-    post:
-      security:
-        - bearerAuth: [ ]
-      summary: Set Settings for Parsing
-      tags:
-        - Parser
-      operationId: setParserSettings
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UserParserSettingsOpenApi"
-      responses:
-        '201':
-          description: Settings were Successfully Set
-        '401':
-          $ref: "#/components/responses/UnauthorizedError"
-
-  /parser/history:
-    get:
-      security:
-        - bearerAuth: [ ]
-      summary: Return List of User Parser Queries History
-      tags:
-        - Parser
-      operationId: getAllParserQueries
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ParserResultOpenApi'
-        '401':
-          $ref: "#/components/responses/UnauthorizedError"
-
-
-  /parser/{id}:
-    get:
-      security:
-        - bearerAuth: [ ]
-      summary: Return Parser Settings and It's Result File
-      tags:
-        - Parser
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-            minimum: 1
-          description: Parser Settings ID
-      operationId: showParserResultsById
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ParserResultOpenApi"
-        '401':
-          $ref: "#/components/responses/UnauthorizedError"
-    post:
-      security:
-        - bearerAuth: [ ]
-      summary: Start Parsing with Preset Settings with {id}
-      tags:
-        - Parser
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-            minimum: 1
-          description: Parser Settings ID
-      operationId: runParser
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: This Parser Settings wasn't found
-        '401':
-          $ref: "#/components/responses/UnauthorizedError"
-
-  /parser/{id}/download:
-    get:
-      security:
-        - bearerAuth: [ ]
-      summary: Download Results File With the Specific ID
-      tags:
-        - Parser
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-            minimum: 1
-          description: Parser Results File ID
-      operationId: downloadFile
-      responses:
-        200:
-          description: The file download was successful
-          content:
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-        401:
-          $ref: "#/components/responses/UnauthorizedError"
-        500:
-          description: Internal Server Error
 
 components:
 
@@ -343,6 +222,7 @@ components:
         - id
         - accessToken
         - username
+        - roles
       properties:
         id:
           type: integer
@@ -352,90 +232,7 @@ components:
           pattern: ^Bearer\s.+$
         username:
           type: string
-
-    ParserResultOpenApi:
-      type: object
-      required:
-        - id
-        - userParserSettingsId
-        - linkToDownloadResults
-      properties:
-        id:
-          type: integer
-          format: int64
-        userParserSettingsId:
-          type: integer
-          format: int64
-        linkToDownloadResults:
-          type: string
-
-    UserParserSettingsOpenApi:
-      type: object
-      required:
-        - firstPageUrl
-        - numOfPagesToParse
-        - className
-        - tagName
-        - cssSelectorNextPage
-        - header
-        - elementLocatorsIds
-        - outputFileType
-      properties:
-        firstPageUrl:
-          type: string
-        numOfPagesToParse:
-          type: integer
-          format: int32
-        className:
-          type: string
-        tagName:
-          type: string
-        cssSelectorNextPage:
-          type: string
-        header:
+        roles:
           type: array
           items:
             type: string
-        elementLocatorsIds:
-          type: array
-          items:
-            type: integer
-            format: int64
-        outputFileType:
-          type: object
-          $ref: "#/components/schemas/OutputFileTypeOpenApi"
-
-
-    ElementLocatorOpenApi:
-      type: object
-      required:
-        - elementType
-        - pathToLocator
-        - userParserSettingsId
-      properties:
-        id:
-          type: integer
-          format: int64
-        elementType:
-          type: object
-          $ref: "#/components/schemas/ElementTypeOpenApi"
-        pathToLocator:
-          type: string
-        extraPointer:
-          type: string
-        userParserSettingsId:
-          type: integer
-          format: int64
-
-    OutputFileTypeOpenApi:
-      type: string
-      enum:
-        - XLSX
-        - CSV
-
-    ElementTypeOpenApi:
-      type: string
-      enum:
-        - XPATH
-        - TAG_ATTR
-        - CSS
