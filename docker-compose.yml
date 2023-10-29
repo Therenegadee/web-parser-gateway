@@ -20,7 +20,7 @@ services:
     ports:
       - 5433:5432
 
-  db-study:
+  db-telegram:
     image: postgres
     environment:
       - POSTGRES_DB=telegram_service

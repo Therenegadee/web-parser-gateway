@@ -3,7 +3,7 @@ info:
   title: Data Harvest Parser
   version: 0.0.1
 servers:
-  - url: http://localhost:8082/api
+  - url: http://localhost:8081/api
     description: Development Server
 
 paths:
