@@ -1,4 +1,4 @@
-package parser.gateway.utils;
+package parser.gateway.security.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -8,12 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import parser.gateway.user.UserDetailsImpl;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -24,12 +22,9 @@ public class JwtUtils {
     @Value("${jwt.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(String username, List<String> roles) {
-        Map<String, Object> claims = new HashMap();
-        claims.put("roles", roles);
+    public String generateJwtToken(UserDetailsImpl user) {
         return Jwts.builder()
-                .setSubject(username)
-                .setClaims(claims)
+                .setSubject((user.getUsername()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
@@ -40,9 +35,14 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
-    public Long getTimeLeftMs(String token) {
-        Claims claims = this.getAllClaimsByToken(token);
-        return claims.getExpiration().getTime() - (new Date()).getTime();
+    public String getUserNameFromJwtToken(String jwtToken) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(key())
+                .build()
+                .parseClaimsJws(jwtToken)
+                .getBody()
+                .getSubject();
     }
 
     public Claims getAllClaimsByToken(String token) {
@@ -51,7 +51,8 @@ public class JwtUtils {
                 .parseClaimsJws(token)
                 .getBody();
     }
-    public boolean isTokenValid(String authToken) {
+
+    public boolean validateToken(String authToken) {
         try {
             Jwts
                     .parserBuilder()

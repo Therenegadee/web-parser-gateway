@@ -31,6 +31,10 @@
 			<artifactId>spring-cloud-starter-gateway</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
@@ -124,24 +128,46 @@
 				<version>5.3.0</version>
 				<executions>
 					<execution>
-						<id>generate-client</id>
+						<id>generate-user-client</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>./src/main/resources/openAPI/user-api.openapi.yml</inputSpec>
-							<generatorName>java</generatorName>
-							<library>native</library>
-							<apiPackage>parser.gateway.openapi.api</apiPackage>
-							<modelPackage>parser.gateway.openapi.model</modelPackage>
+							<inputSpec>
+								./src/main/resources/openAPI/user-api.openapi.yml
+							</inputSpec>
+							<output>./target/generated-sources/openapi/</output>
+							<generatorName>spring</generatorName>
+							<library>spring-cloud</library>
+							<apiPackage>gateway.openapi.user.api</apiPackage>
+							<modelPackage>gateway.openapi.user.model</modelPackage>
+							<generateApis>true</generateApis>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateModelTests>false</generateModelTests>
+							<generateApiTests>false</generateApiTests>
+							<generateSupportingFiles>false</generateSupportingFiles>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-parser-client</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>
+								./src/main/resources/openAPI/parser-api.openapi.yml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+							<library>spring-cloud</library>
+							<apiPackage>gateway.openapi.parser.api</apiPackage>
+							<modelPackage>gateway.openapi.parser.model</modelPackage>
 							<generateApiDocumentation>false</generateApiDocumentation>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateModelTests>false</generateModelTests>
 							<generateApiTests>false</generateApiTests>
 							<generateSupportingFiles>true</generateSupportingFiles>
-							<supportingFilesToGenerate>
-								ApiCallback.java,ApiClient.java,ApiException.java,ApiResponse.java,Configuration.java,Pair.java,ProgressRequestBody.java,ProgressResponseBody.java,StringUtil.java,ApiKeyAuth.java,Authentication.java,HttpBasicAuth.java,JSON.java,OAuth.java,EncodingUtils.java,RFC3339DateFormat.java
-							</supportingFilesToGenerate>
+							<supportingFilesToGenerate>ApiKeyRequestInterceptor.java,ClientConfiguration.java</supportingFilesToGenerate>
 						</configuration>
 					</execution>
 				</executions>
