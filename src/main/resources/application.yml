@@ -1,46 +1,8 @@
 server:
   port: 8080
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
-management:
-  endpoint:
-    gateway:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: gateway
-
 spring:
   application:
     name: gateway
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-      routes:
-        - id: AuthService
-          uri: lb://user-service
-          predicates:
-            - Path=/api/auth/**
-        - id: ParserService
-          uri: lb://parser-service
-          predicates:
-            - Path=/api/parser/**
-          filters:
-            - AuthFilter
-        - id: UserService
-          uri: lb://user-service
-          predicates:
-            - Path=/api/user/**
-          filters:
-            - AuthFilter
-
 jwt:
   jwtSecret: CzBWQs4W2SoUHFDjVUWPEP3rSUGCO9afPcYh8oYWqk0ht2XN3auyJYYdzcnXV0lq
   jwtExpirationMs: 7200000
