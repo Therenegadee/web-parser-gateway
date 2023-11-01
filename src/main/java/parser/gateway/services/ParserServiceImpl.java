@@ -4,6 +4,7 @@ import gateway.openapi.parser.ApiException;
 import gateway.openapi.parser.api.ParserApi;
 import gateway.openapi.parser.model.ParserResultOpenApi;
 import gateway.openapi.parser.model.UserParserSettingsOpenApi;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.io.Resource;
@@ -15,6 +16,7 @@ import parser.gateway.services.interfaces.ParserService;
 import java.util.HashSet;
 import java.util.Set;
 
+@Observed
 @Service
 @RequiredArgsConstructor
 public class ParserServiceImpl implements ParserService {

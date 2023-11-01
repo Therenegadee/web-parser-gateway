@@ -2,6 +2,7 @@ package parser.gateway.services;
 
 import gateway.openapi.user.ApiException;
 import gateway.openapi.user.ApiResponse;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +15,7 @@ import gateway.openapi.user.model.LoginRequestOpenApi;
 import gateway.openapi.user.model.SignupRequestOpenApi;
 import parser.gateway.services.interfaces.AuthService;
 
-
+@Observed
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {

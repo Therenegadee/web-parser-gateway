@@ -1,0 +1,9 @@
+FROM openjdk:17-oracle
+ENV TZ=Europe/Moscow
+
+RUN mkdir /scrapper-service
+WORKDIR /scrapper-service
+
+COPY ./jar/scrapper-service.jar .
+
+ENTRYPOINT ["java","-jar","scrapper-service.jar"]

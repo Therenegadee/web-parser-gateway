@@ -1,0 +1,9 @@
+FROM openjdk:17-oracle
+ENV TZ=Europe/Moscow
+
+RUN mkdir /user-service
+WORKDIR /user-service
+
+COPY jar/user-service.jar .
+
+ENTRYPOINT ["java","-jar","user-service.jar"]

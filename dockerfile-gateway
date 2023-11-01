@@ -1,0 +1,9 @@
+FROM openjdk:17-oracle
+ENV TZ=Europe/Moscow
+
+RUN mkdir /gateway-service
+WORKDIR /gateway-service
+
+COPY jar/gateway-service.jar .
+
+ENTRYPOINT ["java","-jar","gateway-service.jar"]
