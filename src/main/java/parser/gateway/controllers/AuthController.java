@@ -12,7 +12,6 @@ import gateway.openapi.user.model.LoginRequestOpenApi;
 import gateway.openapi.user.model.SignupRequestOpenApi;
 import parser.gateway.services.interfaces.AuthService;
 
-@Observed
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
@@ -20,18 +19,24 @@ import parser.gateway.services.interfaces.AuthService;
 public class AuthController {
     private final AuthService authService;
 
+    @Observed(
+            name = "signin",
+            contextualName = "login operation"
+    )
     @PostMapping("/signin")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<JwtResponseOpenApi> authenticateUser(@Valid @RequestBody LoginRequestOpenApi loginRequest) {
         return authService.authenticateUser(loginRequest);
     }
 
+    @Observed
     @PostMapping("/signup")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<Void> registerUser(@Valid @RequestBody SignupRequestOpenApi signUpRequest) {
         return authService.registerUser(signUpRequest);
     }
 
+    @Observed
     @PatchMapping("/activation")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<Void> activateUser(@RequestParam("activationToken") String activationToken) {

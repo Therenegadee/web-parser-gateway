@@ -17,12 +17,14 @@ public class UserServiceImpl implements UserService {
     private final UserApi userApi;
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public ResponseEntity<UserOpenApi> showUserInfo(Long id) {
         return ResponseEntity.ok(userApi.showUserInfoById(id));
     }
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public ResponseEntity<UserOpenApi> showUserInfo(String username) {
         return  ResponseEntity.ok(userApi.showUserInfoByUsername(username));

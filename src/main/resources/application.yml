@@ -20,10 +20,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus,metrics
+        include: health,info,prometheus,metrics,beans
   metrics:
+    export:
+      loki:
+        enabled: true
+        step: 1m
     tags:
       application: ${spring.application.name}
+    prometheus:
+      enabled: true
     distribution:
       percentiles-histogram:
         http:

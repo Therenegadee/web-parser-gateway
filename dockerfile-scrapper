@@ -4,6 +4,6 @@ ENV TZ=Europe/Moscow
 RUN mkdir /scrapper-service
 WORKDIR /scrapper-service
 
-COPY ./jar/scrapper-service.jar .
+COPY ./jar/parser-service-1.0.jar .
 
-ENTRYPOINT ["java","-jar","scrapper-service.jar"]
+ENTRYPOINT ["java","-jar","parser-service-1.0.jar"]

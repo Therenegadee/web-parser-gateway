@@ -16,25 +16,27 @@ import parser.gateway.services.interfaces.ParserService;
 import java.util.HashSet;
 import java.util.Set;
 
-@Observed
 @Service
 @RequiredArgsConstructor
 public class ParserServiceImpl implements ParserService {
     private final ParserApi parserApi;
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public Set<ParserResultOpenApi> getAllParserQueries() {
         return new HashSet<>(parserApi.getAllParserQueries());
     }
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public ParserResultOpenApi showParserResultsById(Long id) {
         return parserApi.showParserResultsById(id);
     }
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public ResponseEntity<Void> setParserSettings(UserParserSettingsOpenApi userParserSettingsOpenApi) {
         parserApi.setParserSettings(userParserSettingsOpenApi);
@@ -42,6 +44,7 @@ public class ParserServiceImpl implements ParserService {
     }
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public ResponseEntity<Void> runParser(Long id) {
         parserApi.runParser(id);
@@ -49,6 +52,7 @@ public class ParserServiceImpl implements ParserService {
     }
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public ResponseEntity<Resource> downloadFile(Long id) {
         //TODO: доделать

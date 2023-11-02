@@ -7,11 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TracingConfig {
-
     @Bean
-    public ObservedAspect observedAspect(ObservationRegistry observationRegistry) {
+    ObservedAspect observedAspect(ObservationRegistry observationRegistry) {
         return new ObservedAspect(observationRegistry);
     }
-
-
 }

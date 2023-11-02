@@ -14,7 +14,6 @@ import parser.gateway.services.interfaces.ParserService;
 
 import java.util.List;
 
-@Observed
 @RestController
 @RequestMapping("/api/parser")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -22,30 +21,35 @@ import java.util.List;
 public class ParserController {
     private final ParserService parserService;
 
+//    @Observed
     public ResponseEntity<List<ParserResultOpenApi>> getAllParserQueries() {
         return ResponseEntity
                 .ok(parserService.getAllParserQueries().stream().toList());
 
     }
 
+    @Observed
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ParserResultOpenApi> showParserResultsById(@PathVariable("id") @Valid Long id) {
         return ResponseEntity.ok(parserService.showParserResultsById(id));
     }
 
+    @Observed
     @PostMapping("/settings")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Void> setParserSettings(@RequestBody UserParserSettingsOpenApi userParserSettingsOpenApi) {
         return parserService.setParserSettings(userParserSettingsOpenApi);
     }
 
+    @Observed
     @PostMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Void> runParser(@PathVariable("id") @Valid Long id) {
         return parserService.runParser(id);
     }
 
+    @Observed
     @GetMapping("/{id}/download")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Resource> downloadFile(@PathVariable("id") @Valid Long id) {

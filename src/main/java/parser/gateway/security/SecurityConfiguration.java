@@ -60,7 +60,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request.requestMatchers
                                 (
                                         "/api/auth/**",
-                                        "/api/test/**",
                                         "/api/parser/**",
                                         "/api/telegram/auth/**",
                                         "/api/user/**",

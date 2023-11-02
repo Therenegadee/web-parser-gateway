@@ -15,13 +15,13 @@ import gateway.openapi.user.model.LoginRequestOpenApi;
 import gateway.openapi.user.model.SignupRequestOpenApi;
 import parser.gateway.services.interfaces.AuthService;
 
-@Observed
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final AuthorizationApi authApi;
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public ResponseEntity<Void> registerUser(SignupRequestOpenApi signUpRequest) {
         ApiResponse<Void> response = authApi.registerUserWithHttpInfo(signUpRequest);
@@ -29,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public ResponseEntity<JwtResponseOpenApi> authenticateUser(LoginRequestOpenApi loginRequest) {
         ApiResponse<JwtResponseOpenApi> response = authApi.authenticateUserWithHttpInfo(loginRequest);
@@ -36,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Observed
     @SneakyThrows(ApiException.class)
     public ResponseEntity<Void> activateUser(String activationToken) {
         ApiResponse<Void> response = authApi.activateUserWithHttpInfo(activationToken);

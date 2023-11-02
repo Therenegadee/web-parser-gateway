@@ -2,69 +2,89 @@ version: '3'
 
 services:
 
-  db-user:
+  db-parser:
     image: postgres
+    container_name: db-parser
     environment:
-      - POSTGRES_DB=user_service
-      - POSTGRES_USER=userService
-      - POSTGRES_PASSWORD=userService
+      - POSTGRES_DB=parser
+      - POSTGRES_USER=parser
+      - POSTGRES_PASSWORD=parser
     ports:
-      - 5432:5432
+      - "5432:5432"
+    volumes:
+      - ./src/resources/db:/docker-entrypoint-initdb.d
 
-  db-scrapper:
-    image: postgres
-    environment:
-      - POSTGRES_DB=scraper_service
-      - POSTGRES_USER=scraperService
-      - POSTGRES_PASSWORD=scraperService
-    ports:
-      - 5433:5432
-
-  db-telegram:
-    image: postgres
-    environment:
-      - POSTGRES_DB=telegram_service
-      - POSTGRES_USER=telegramService
-      - POSTGRES_PASSWORD=telegramService
-    ports:
-      - 5434:5432
+  #  db-user:
+  #    image: postgres
+  #    container_name: db-user
+  #    environment:
+  #      - POSTGRES_DB=user_service
+  #      - POSTGRES_USER=userService
+  #      - POSTGRES_PASSWORD=userService
+  #    ports:
+  #      - "5432:5432"
+  #
+  #  db-scrapper:
+  #    image: postgres
+  #    container_name: db-scrapper
+  #    environment:
+  #      - POSTGRES_DB=scrapper_service
+  #      - POSTGRES_USER=scrapperService
+  #      - POSTGRES_PASSWORD=scrapperService
+  #    ports:
+  #      - "5432:5432"
+  #
+  #  db-telegram:
+  #    image: postgres
+  #    container_name: db-telegram
+  #    environment:
+  #      - POSTGRES_DB=telegram_service
+  #      - POSTGRES_USER=telegramService
+  #      - POSTGRES_PASSWORD=telegramService
+  #    ports:
+  #      - "5434:5432"
 
   gateway-service:
     container_name: gateway-service
     build:
       context: .
       dockerfile: dockerfile-gateway
-    network_mode: host
     environment:
       - LOKI_HOST=loki
       - TEMPO_HOST=tempo
+    ports:
+      - '8080:8080'
 
   user-service:
     depends_on:
-      - db-user
+      - db-parser
     container_name: user-service
     build:
       context: .
       dockerfile: dockerfile-user
-    network_mode: host
     environment:
       - LOKI_HOST=loki
       - TEMPO_HOST=tempo
+    ports:
+      - '8081:8081'
+
 
   scrapper-service:
     depends_on:
-      - db-scrapper
+      - db-parser
     container_name: scrapper-service
     build:
       context: .
       dockerfile: dockerfile-scrapper
-    network_mode: host
     environment:
       - LOKI_HOST=loki
       - TEMPO_HOST=tempo
+    ports:
+      - '8082:8082'
 
   tempo:
     image: grafana/tempo
+    container_name: tempo
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./docker/tempo/tempo-local.yml:/etc/tempo.yaml
@@ -75,6 +95,7 @@ services:
 
   loki:
     image: grafana/loki
+    container_name: loki
     command: [ "-config.file=/etc/loki/local-config.yaml" ]
     ports:
       - "3100:3100"
@@ -86,6 +107,7 @@ services:
 
   prometheus:
     image: prom/prometheus
+    container_name: prometheus
     extra_hosts: [ 'host.docker.internal:host-gateway' ]
     command:
       - --enable-feature=exemplar-storage
@@ -99,6 +121,7 @@ services:
 
   grafana:
     image: grafana/grafana
+    container_name: grafana
     volumes:
       - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources
       - ./docker/grafana/dashboards:/etc/grafana/dashboards

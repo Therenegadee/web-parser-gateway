@@ -9,12 +9,12 @@ scrape_configs:
   - job_name: 'gateway-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:8080' ]
+      - targets: [ 'gateway-service:8080']
   - job_name: 'user-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:8081' ]
+      - targets: [ 'user-service:8081']
   - job_name: 'parser-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'host.docker.internal:8082' ]
+      - targets: [ 'scrapper-service:8082']
