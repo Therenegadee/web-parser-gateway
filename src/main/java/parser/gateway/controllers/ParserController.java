@@ -5,7 +5,6 @@ import gateway.openapi.parser.model.UserParserSettingsOpenApi;
 import io.micrometer.observation.annotation.Observed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,32 +20,51 @@ import java.util.List;
 public class ParserController {
     private final ParserService parserService;
 
-//    @Observed
-    public ResponseEntity<List<ParserResultOpenApi>> getAllParserQueries() {
-        return ResponseEntity
-                .ok(parserService.getAllParserQueries().stream().toList());
-
-    }
-
     @Observed
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ParserResultOpenApi> showParserResultsById(@PathVariable("id") @Valid Long id) {
-        return ResponseEntity.ok(parserService.showParserResultsById(id));
-    }
-
-    @Observed
-    @PostMapping("/settings")
+    @GetMapping("/preset")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Void> setParserSettings(@RequestBody UserParserSettingsOpenApi userParserSettingsOpenApi) {
-        return parserService.setParserSettings(userParserSettingsOpenApi);
+    public ResponseEntity<List<UserParserSettingsOpenApi>> getParserSettingsByUserId(
+            @RequestParam(name = "userId") Long userId
+    ) {
+        return parserService.getParserSettingsByUserId(userId);
+    }
+
+    @Observed
+    @PostMapping("/preset")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<Void> createParserSettings(
+            @RequestParam(name = "userId") Long userId,
+            @RequestBody UserParserSettingsOpenApi userParserSettingsOpenApi
+    ) {
+        return parserService.createParserSettings(userId, userParserSettingsOpenApi);
+    }
+
+    @Observed
+    @GetMapping("/preset/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<UserParserSettingsOpenApi> getParserSettingsById(
+            @PathVariable("id") @Valid Long id
+    ) {
+        return parserService.getParserSettingsById(id);
+    }
+
+    @Observed
+    @DeleteMapping("/preset/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteParserSettingsById(
+            @PathVariable("id") @Valid Long id
+    ) {
+        return parserService.deleteParserSettingsById(id);
     }
 
     @Observed
     @PostMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Void> runParser(@PathVariable("id") @Valid Long id) {
-        return parserService.runParser(id);
+    public ResponseEntity<Void> runParser(
+            @PathVariable("id") @Valid Long id,
+            @RequestBody ParserResultOpenApi parserResultOpenApi
+    ) {
+        return parserService.runParser(id, parserResultOpenApi);
     }
 
     @Observed

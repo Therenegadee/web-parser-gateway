@@ -1,6 +1,7 @@
 package parser.gateway.services;
 
 import gateway.openapi.parser.ApiException;
+import gateway.openapi.parser.ApiResponse;
 import gateway.openapi.parser.api.ParserApi;
 import gateway.openapi.parser.model.ParserResultOpenApi;
 import gateway.openapi.parser.model.UserParserSettingsOpenApi;
@@ -8,13 +9,12 @@ import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import parser.gateway.services.interfaces.ParserService;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,30 +24,36 @@ public class ParserServiceImpl implements ParserService {
     @Override
     @Observed
     @SneakyThrows(ApiException.class)
-    public Set<ParserResultOpenApi> getAllParserQueries() {
-        return new HashSet<>(parserApi.getAllParserQueries());
+    public ResponseEntity<List<UserParserSettingsOpenApi>> getParserSettingsByUserId(Long userId) {
+        return generateResponseEntityFromApiResponse(parserApi.getParserSettingsByUserIdWithHttpInfo(userId));
     }
 
     @Override
     @Observed
     @SneakyThrows(ApiException.class)
-    public ParserResultOpenApi showParserResultsById(Long id) {
-        return parserApi.showParserResultsById(id);
+    public ResponseEntity<Void> createParserSettings(Long userId, UserParserSettingsOpenApi userParserSettingsOpenApi) {
+        return generateResponseEntityFromApiResponse(parserApi.createParserSettingsWithHttpInfo(userId, userParserSettingsOpenApi));
     }
 
     @Override
     @Observed
     @SneakyThrows(ApiException.class)
-    public ResponseEntity<Void> setParserSettings(UserParserSettingsOpenApi userParserSettingsOpenApi) {
-        parserApi.setParserSettings(userParserSettingsOpenApi);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<UserParserSettingsOpenApi> getParserSettingsById(Long id) {
+        return generateResponseEntityFromApiResponse(parserApi.getParserSettingsByIdWithHttpInfo(id));
     }
 
     @Override
     @Observed
     @SneakyThrows(ApiException.class)
-    public ResponseEntity<Void> runParser(Long id) {
-        parserApi.runParser(id);
+    public ResponseEntity<Void> deleteParserSettingsById(Long id) {
+        return generateResponseEntityFromApiResponse(parserApi.deleteParserSettingsByIdWithHttpInfo(id));
+    }
+
+    @Override
+    @Observed
+    @SneakyThrows(ApiException.class)
+    public ResponseEntity<Void> runParser(Long id, ParserResultOpenApi parserResultOpenApi) {
+        parserApi.runParser(id, parserResultOpenApi);
         return ResponseEntity.ok().build();
     }
 
@@ -58,5 +64,14 @@ public class ParserServiceImpl implements ParserService {
         //TODO: доделать
         parserApi.downloadFile(id);
         return null;
+    }
+
+    private <T> ResponseEntity<T> generateResponseEntityFromApiResponse(ApiResponse<T> response) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(response.getHeaders());
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(headers)
+                .body(response.getData());
     }
 }

@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import gateway.openapi.user.api.AuthorizationApi;
 import gateway.openapi.user.model.JwtResponseOpenApi;
@@ -25,7 +24,7 @@ public class AuthServiceImpl implements AuthService {
     @SneakyThrows(ApiException.class)
     public ResponseEntity<Void> registerUser(SignupRequestOpenApi signUpRequest) {
         ApiResponse<Void> response = authApi.registerUserWithHttpInfo(signUpRequest);
-        return responseEntityFromApiResponse(response);
+        return generateResponseEntityFromApiResponse(response);
     }
 
     @Override
@@ -33,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     @SneakyThrows(ApiException.class)
     public ResponseEntity<JwtResponseOpenApi> authenticateUser(LoginRequestOpenApi loginRequest) {
         ApiResponse<JwtResponseOpenApi> response = authApi.authenticateUserWithHttpInfo(loginRequest);
-        return responseEntityFromApiResponse(response);
+        return generateResponseEntityFromApiResponse(response);
     }
 
     @Override
@@ -41,10 +40,10 @@ public class AuthServiceImpl implements AuthService {
     @SneakyThrows(ApiException.class)
     public ResponseEntity<Void> activateUser(String activationToken) {
         ApiResponse<Void> response = authApi.activateUserWithHttpInfo(activationToken);
-        return responseEntityFromApiResponse(response);
+        return generateResponseEntityFromApiResponse(response);
     }
 
-    private <T> ResponseEntity<T> responseEntityFromApiResponse(ApiResponse<T> response) {
+    private <T> ResponseEntity<T> generateResponseEntityFromApiResponse(ApiResponse<T> response) {
         HttpHeaders headers = new HttpHeaders();
         headers.putAll(response.getHeaders());
         return ResponseEntity

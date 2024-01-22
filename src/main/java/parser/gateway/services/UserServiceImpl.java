@@ -27,6 +27,6 @@ public class UserServiceImpl implements UserService {
     @Observed
     @SneakyThrows(ApiException.class)
     public ResponseEntity<UserOpenApi> showUserInfo(String username) {
-        return  ResponseEntity.ok(userApi.showUserInfoByUsername(username));
+        return ResponseEntity.ok(userApi.showUserInfoByUsername(username));
     }
 }
