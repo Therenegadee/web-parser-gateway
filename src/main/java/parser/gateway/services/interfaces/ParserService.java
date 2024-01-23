@@ -5,18 +5,21 @@ import gateway.openapi.parser.model.UserParserSettingsOpenApi;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
+import java.util.UUID;
 
 public interface ParserService {
-    ResponseEntity<List<UserParserSettingsOpenApi>> getParserSettingsByUserId(Long userId);
 
-    ResponseEntity<Void> createParserSettings(Long userId, UserParserSettingsOpenApi userParserSettingsOpenApi);
+    ResponseEntity<Void> createParserSettings(
+            Long userId,
+            UserParserSettingsOpenApi userParserSettingsOpenApi,
+            String folderName
+    );
 
-    ResponseEntity<UserParserSettingsOpenApi> getParserSettingsById(Long id);
+    ResponseEntity<UserParserSettingsOpenApi> getParserSettingsById(UUID settingsId, UUID storageId);
 
-    ResponseEntity<Void> deleteParserSettingsById(Long id);
+    ResponseEntity<Void> deleteParserSettingsById(UUID settingsId, UUID storageId);
 
-    ResponseEntity<Void> runParser(Long id, ParserResultOpenApi parserResultOpenApi);
+    ResponseEntity<Void> runParser(UUID settingsId, UUID storageId, ParserResultOpenApi parserResultOpenApi);
 
-    ResponseEntity<Resource> downloadFile(Long id);
+    ResponseEntity<Resource> downloadFile(UUID settingsId, UUID storageId, Long parserResultId);
 }

@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import parser.gateway.services.interfaces.ParserService;
 
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/parser")
@@ -21,56 +21,55 @@ public class ParserController {
     private final ParserService parserService;
 
     @Observed
-    @GetMapping("/preset")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<UserParserSettingsOpenApi>> getParserSettingsByUserId(
-            @RequestParam(name = "userId") Long userId
-    ) {
-        return parserService.getParserSettingsByUserId(userId);
-    }
-
-    @Observed
     @PostMapping("/preset")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Void> createParserSettings(
             @RequestParam(name = "userId") Long userId,
-            @RequestBody UserParserSettingsOpenApi userParserSettingsOpenApi
+            @RequestBody UserParserSettingsOpenApi userParserSettingsOpenApi,
+            @RequestParam(name = "folderName", required = false) String folderName
     ) {
-        return parserService.createParserSettings(userId, userParserSettingsOpenApi);
+        return parserService.createParserSettings(userId, userParserSettingsOpenApi, folderName);
     }
 
     @Observed
-    @GetMapping("/preset/{id}")
+    @GetMapping("/preset/{presetId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<UserParserSettingsOpenApi> getParserSettingsById(
-            @PathVariable("id") @Valid Long id
+            @PathVariable("presetId") @Valid UUID id,
+            @RequestParam(name = "storageId") UUID storageId
     ) {
-        return parserService.getParserSettingsById(id);
+        return parserService.getParserSettingsById(id, storageId);
     }
 
     @Observed
-    @DeleteMapping("/preset/{id}")
+    @DeleteMapping("/preset/{presetId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteParserSettingsById(
-            @PathVariable("id") @Valid Long id
+            @PathVariable("presetId") @Valid UUID id,
+            @RequestParam(name = "storageId") UUID storageId
     ) {
-        return parserService.deleteParserSettingsById(id);
+        return parserService.deleteParserSettingsById(id, storageId);
     }
 
     @Observed
-    @PostMapping("/{id}")
+    @PostMapping("/preset/{presetId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Void> runParser(
-            @PathVariable("id") @Valid Long id,
+            @PathVariable("presetId") @Valid UUID id,
+            @RequestParam("storageId") UUID storageId,
             @RequestBody ParserResultOpenApi parserResultOpenApi
     ) {
-        return parserService.runParser(id, parserResultOpenApi);
+        return parserService.runParser(id, storageId, parserResultOpenApi);
     }
 
     @Observed
-    @GetMapping("/{id}/download")
+    @GetMapping("/preset/{presetId}/download")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Resource> downloadFile(@PathVariable("id") @Valid Long id) {
-        return parserService.downloadFile(id);
+    public ResponseEntity<Resource> downloadFile(
+            @PathVariable("presetId") @Valid UUID settingsId,
+            @RequestParam("storageId") @Valid UUID storageId,
+            @RequestParam("resultId") @Valid Long resultId
+    ) {
+        return parserService.downloadFile(settingsId, storageId, resultId);
     }
 }

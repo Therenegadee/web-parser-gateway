@@ -15,54 +15,54 @@ import org.springframework.stereotype.Service;
 import parser.gateway.services.interfaces.ParserService;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ParserServiceImpl implements ParserService {
     private final ParserApi parserApi;
 
+
     @Override
     @Observed
     @SneakyThrows(ApiException.class)
-    public ResponseEntity<List<UserParserSettingsOpenApi>> getParserSettingsByUserId(Long userId) {
-        return generateResponseEntityFromApiResponse(parserApi.getParserSettingsByUserIdWithHttpInfo(userId));
+    public ResponseEntity<Void> createParserSettings(
+            Long userId,
+            UserParserSettingsOpenApi userParserSettingsOpenApi,
+            String folderName
+    ) {
+        return generateResponseEntityFromApiResponse(parserApi
+                .createParserSettingsWithHttpInfo(userId, userParserSettingsOpenApi, folderName));
     }
 
     @Override
     @Observed
     @SneakyThrows(ApiException.class)
-    public ResponseEntity<Void> createParserSettings(Long userId, UserParserSettingsOpenApi userParserSettingsOpenApi) {
-        return generateResponseEntityFromApiResponse(parserApi.createParserSettingsWithHttpInfo(userId, userParserSettingsOpenApi));
+    public ResponseEntity<UserParserSettingsOpenApi> getParserSettingsById(UUID id, UUID storageId) {
+        return generateResponseEntityFromApiResponse(parserApi.getParserSettingsByIdWithHttpInfo(id, storageId));
     }
 
     @Override
     @Observed
     @SneakyThrows(ApiException.class)
-    public ResponseEntity<UserParserSettingsOpenApi> getParserSettingsById(Long id) {
-        return generateResponseEntityFromApiResponse(parserApi.getParserSettingsByIdWithHttpInfo(id));
+    public ResponseEntity<Void> deleteParserSettingsById(UUID id, UUID storageId) {
+        return generateResponseEntityFromApiResponse(parserApi.deleteParserSettingsByIdWithHttpInfo(id, storageId));
     }
 
     @Override
     @Observed
     @SneakyThrows(ApiException.class)
-    public ResponseEntity<Void> deleteParserSettingsById(Long id) {
-        return generateResponseEntityFromApiResponse(parserApi.deleteParserSettingsByIdWithHttpInfo(id));
-    }
-
-    @Override
-    @Observed
-    @SneakyThrows(ApiException.class)
-    public ResponseEntity<Void> runParser(Long id, ParserResultOpenApi parserResultOpenApi) {
-        parserApi.runParser(id, parserResultOpenApi);
+    public ResponseEntity<Void> runParser(UUID id, UUID storageId, ParserResultOpenApi parserResultOpenApi) {
+        parserApi.runParser(id, storageId, parserResultOpenApi);
         return ResponseEntity.ok().build();
     }
 
     @Override
     @Observed
     @SneakyThrows(ApiException.class)
-    public ResponseEntity<Resource> downloadFile(Long id) {
+    public ResponseEntity<Resource> downloadFile(UUID id, UUID storageId, Long resultId) {
         //TODO: доделать
-        parserApi.downloadFile(id);
+        parserApi.downloadFile(id, storageId, resultId);
         return null;
     }
 
