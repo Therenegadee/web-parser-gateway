@@ -11,8 +11,7 @@ public interface ParserService {
 
     ResponseEntity<Void> createParserSettings(
             Long userId,
-            UserParserSettingsOpenApi userParserSettingsOpenApi,
-            String folderName
+            UserParserSettingsOpenApi userParserSettingsOpenApi
     );
 
     ResponseEntity<UserParserSettingsOpenApi> getParserSettingsById(UUID settingsId, UUID storageId);

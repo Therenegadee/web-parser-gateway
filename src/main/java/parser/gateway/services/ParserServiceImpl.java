@@ -28,11 +28,10 @@ public class ParserServiceImpl implements ParserService {
     @SneakyThrows(ApiException.class)
     public ResponseEntity<Void> createParserSettings(
             Long userId,
-            UserParserSettingsOpenApi userParserSettingsOpenApi,
-            String folderName
+            UserParserSettingsOpenApi userParserSettingsOpenApi
     ) {
         return generateResponseEntityFromApiResponse(parserApi
-                .createParserSettingsWithHttpInfo(userId, userParserSettingsOpenApi, folderName));
+                .createParserSettingsWithHttpInfo(userId, userParserSettingsOpenApi));
     }
 
     @Override

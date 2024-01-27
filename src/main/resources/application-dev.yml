@@ -1,0 +1,11 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: gateway
+
+
+
+jwt:
+  jwtSecret: CzBWQs4W2SoUHFDjVUWPEP3rSUGCO9afPcYh8oYWqk0ht2XN3auyJYYdzcnXV0lq
+  jwtExpirationMs: 7200000

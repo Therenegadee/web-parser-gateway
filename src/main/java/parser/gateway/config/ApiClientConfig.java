@@ -1,6 +1,7 @@
 package parser.gateway.config;
 
 import gateway.openapi.parser.api.ParserApi;
+import gateway.openapi.parser.api.StorageApi;
 import gateway.openapi.user.ApiClient;
 import gateway.openapi.user.api.AuthorizationApi;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +36,10 @@ public class ApiClientConfig {
     @Bean
     public ParserApi parserApi(gateway.openapi.parser.ApiClient apiClient){
         return new ParserApi(apiClient);
+    }
+
+    @Bean
+    public StorageApi storageApi(gateway.openapi.parser.ApiClient apiClient) {
+        return new StorageApi(apiClient);
     }
 }

@@ -36,7 +36,6 @@ public class SecurityConfiguration {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsServiceImpl);
-//        authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
@@ -45,11 +44,6 @@ public class SecurityConfiguration {
         return authConfig
                 .getAuthenticationManager();
     }
-
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -61,7 +55,7 @@ public class SecurityConfiguration {
                                 (
                                         "/api/auth/**",
                                         "/api/parser/**",
-                                        "/api/telegram/auth/**",
+                                        "/api/storage/**",
                                         "/api/user/**",
                                         "/actuator/**"
                                 )

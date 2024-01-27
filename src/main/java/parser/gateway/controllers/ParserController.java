@@ -25,10 +25,9 @@ public class ParserController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Void> createParserSettings(
             @RequestParam(name = "userId") Long userId,
-            @RequestBody UserParserSettingsOpenApi userParserSettingsOpenApi,
-            @RequestParam(name = "folderName", required = false) String folderName
+            @RequestBody UserParserSettingsOpenApi userParserSettingsOpenApi
     ) {
-        return parserService.createParserSettings(userId, userParserSettingsOpenApi, folderName);
+        return parserService.createParserSettings(userId, userParserSettingsOpenApi);
     }
 
     @Observed

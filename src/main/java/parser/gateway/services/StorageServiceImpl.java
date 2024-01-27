@@ -18,6 +18,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class StorageServiceImpl implements StorageService {
+
     private final StorageApi storageApi;
 
     @Override
